@@ -1124,7 +1124,8 @@ class Class1PresentationPredictor(object):
             alleles, comparison_quantity)
 
         processing_predictor = self.processing_predictor_with_flanks
-        if not use_flanks or processing_predictor is None:
+        effective_use_flanks = use_flanks and processing_predictor is not None
+        if not effective_use_flanks:
             processing_predictor = self.processing_predictor_without_flanks
 
         if processing_predictor is not None:
@@ -1136,8 +1137,8 @@ class Class1PresentationPredictor(object):
             c_flank_length = 0
 
         sequence_names = []
-        n_flanks = [] if use_flanks else None
-        c_flanks = [] if use_flanks else None
+        n_flanks = [] if effective_use_flanks else None
+        c_flanks = [] if effective_use_flanks else None
         peptides = []
 
         if isinstance(sequences, str):
@@ -1204,7 +1205,7 @@ class Class1PresentationPredictor(object):
                     if not cross_product:
                         sample_names.append(genotype_name)
                     peptides.append(peptide)
-                    if use_flanks:
+                    if effective_use_flanks:
                         n_flanks.append(
                             sequence[n_flank_start : peptide_start])
                         c_flanks.append(
